@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="DynamicHeightImageView">
+        <attr name="corner_top_left" format="dimension"></attr>
+        <attr name="corner_top_right" format="dimension"></attr>
+        <attr name="corner_bottom_left" format="dimension"></attr>
+        <attr name="corner_bottom_right" format="dimension"></attr>
+    </declare-styleable>
+</resources>

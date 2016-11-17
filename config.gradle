@@ -1,0 +1,22 @@
+ext {
+    android = [
+            compileSdkVersion: 23,
+            buildToolsVersion: "23.0.2",
+            minSdkVersion    : 14,
+            targetSdkVersion : 23,
+    ]
+    dependencies = [
+            "appcompat-v7"         : "com.android.support:appcompat-v7:23.4.0",
+            "design"               : "com.android.support:design:23.4.0",
+            "retrofit"             : "com.squareup.retrofit2:retrofit:2.1.0",
+            "converter-gson"       : "com.squareup.retrofit2:converter-gson:2.1.0",
+            "adapter-rxjava"       : "com.squareup.retrofit2:adapter-rxjava:2.1.0",
+            "logging-interceptor"  : "com.squareup.okhttp3:logging-interceptor:3.3.1",
+            "rxjava"               : "io.reactivex:rxjava:1.1.8",
+            "rxandroid"            : "io.reactivex:rxandroid:1.2.1",
+            "butterknife"          : "com.jakewharton:butterknife:8.2.1",
+            "butterknife-compiler" : "com.jakewharton:butterknife-compiler:8.2.1",
+            "glide"                : "com.github.bumptech.glide:glide:3.7.0",
+            "glide-transformations": "jp.wasabeef:glide-transformations:2.0.1"
+    ]
+}
