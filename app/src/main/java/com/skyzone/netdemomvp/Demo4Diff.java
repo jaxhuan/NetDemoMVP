@@ -6,4 +6,6 @@ package com.skyzone.netdemomvp;
 public class Demo4Diff {
 
     public static final String TAG = Demo4Diff.class.getSimpleName();
+
+    public static int hahha = 0;
 }
