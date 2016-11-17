@@ -12,8 +12,6 @@ public class App extends Application {
 
     public static Context mContext;
 
-    public static int hahha = 0;
-
     @Override
     public void onCreate() {
         super.onCreate();
