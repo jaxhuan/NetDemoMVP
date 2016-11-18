@@ -101,6 +101,8 @@ dependencies {
     //img
     compile rootProject.ext.dependencies["glide"]
     compile rootProject.ext.dependencies["glide-transformations"]
+    //logger
+    compile rootProject.ext.dependencies["xlog"]
 }
 
 def releaseTime() {

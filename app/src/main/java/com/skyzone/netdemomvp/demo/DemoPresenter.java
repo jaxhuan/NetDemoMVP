@@ -1,5 +1,6 @@
 package com.skyzone.netdemomvp.demo;
 
+import com.elvishew.xlog.XLog;
 import com.skyzone.netdemomvp.DemoRetrofit;
 import com.skyzone.netdemomvp.data.Result;
 import com.skyzone.netdemomvp.data.bean.MeiZi;
@@ -149,6 +150,7 @@ public class DemoPresenter implements DemoContract.Presenter {
                                 .subscribe(new WebTrueAction<Result<List<Video>>>() {
                                     @Override
                                     public void onSuccess(Result<List<Video>> listResult_v) {
+                                        XLog.d("hahhahahhahahhahah");
                                         LogUtil.i("here" + listResult.results.size());
                                         for (int i = 0; i < listResult_v.results.size(); i++) {
                                             final MeiZi meizi = listResult.results.get(i);
