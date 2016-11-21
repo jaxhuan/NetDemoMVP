@@ -5,15 +5,18 @@ import com.skyzone.netdemomvp.DemoRetrofit;
 import com.skyzone.netdemomvp.data.Result;
 import com.skyzone.netdemomvp.data.bean.MeiZi;
 import com.skyzone.netdemomvp.data.bean.Video;
+import com.skyzone.netdemomvp.util.DateUtil;
 import com.skyzone.netdemomvp.util.LogUtil;
-import com.skyzone.netdemomvp.util.RxJava.WebFalseAction;
-import com.skyzone.netdemomvp.util.RxJava.WebTrueAction;
 import com.skyzone.netdemomvp.util.RxUtil;
 
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Skyzone on 10/31/2016.
@@ -23,15 +26,17 @@ public class DemoPresenter implements DemoContract.Presenter {
     public static final String TAG = DemoPresenter.class.getSimpleName();
 
     private final DemoContract.View mView;
+    private CompositeSubscription mSubscriptions;
 
     public DemoPresenter(DemoContract.View view) {
         mView = view;
 
         mView.setPresenter(this);
+
+        mSubscriptions = new CompositeSubscription();
     }
 
-    @Override
-    public void start() {
+    public void loadData() {
         mView.showLoading(true);
 
 //        DemoRetrofit.getDemoApiInstance().getData(1).enqueue(new Callback<Result<List<MeiZi>>>() {
@@ -140,38 +145,88 @@ public class DemoPresenter implements DemoContract.Presenter {
 //                });
 
 
-        DemoRetrofit.getDemoApiInstance().getData(1)
-                .compose(RxUtil.<Result<List<MeiZi>>>normalSchedulers())
-                .subscribe(new WebTrueAction<Result<List<MeiZi>>>() {
-                    @Override
-                    public void onSuccess(final Result<List<MeiZi>> listResult) {
-                        DemoRetrofit.getDemoApiInstance().getVideo(1)
-                                .compose(RxUtil.<Result<List<Video>>>normalSchedulers())
-                                .subscribe(new WebTrueAction<Result<List<Video>>>() {
-                                    @Override
-                                    public void onSuccess(Result<List<Video>> listResult_v) {
-                                        XLog.d("hahhahahhahahhahah");
-                                        LogUtil.i("here" + listResult.results.size());
-                                        for (int i = 0; i < listResult_v.results.size(); i++) {
-                                            final MeiZi meizi = listResult.results.get(i);
-                                            listResult.results.get(i).setDesc(meizi.getDesc() + "  " + listResult_v.results.get(i).getDesc());
-                                        }
-                                        mView.refresh(listResult.results);
-                                        mView.showLoading(false);
-                                    }
-                                }, new WebFalseAction());
-                    }
-                }, new WebFalseAction());
+//        Subscription su = DemoRetrofit.getDemoApiInstance().getData(1)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(Schedulers.io())
+//                .subscribe(new WebTrueAction<Result<List<MeiZi>>>() {
+//                    @Override
+//                    public void onSuccess(final Result<List<MeiZi>> listResult) {
+//                        Subscription su_video = DemoRetrofit.getDemoApiInstance().getVideo(1)
+//                                .compose(RxUtil.<Result<List<Video>>>normalSchedulers())
+//                                .subscribe(new WebTrueAction<Result<List<Video>>>() {
+//                                    @Override
+//                                    public void onSuccess(Result<List<Video>> listResult_v) {
+//                                        XLog.d("hahhahahhahahhahah");
+//                                        for (int i = 0; i < listResult_v.results.size(); i++) {
+//                                            final MeiZi meizi = listResult.results.get(i);
+//                                            listResult.results.get(i).setDesc(meizi.getDesc() + "  " + listResult_v.results.get(i).getDesc());
+//                                        }
+//                                        mView.refresh(listResult.results);
+//                                        mView.showLoading(false);
+//                                    }
+//                                }, new WebFalseAction());
+//                        mSubscriptions.add(su_video);
+//                    }
+//                }, new WebFalseAction());
 
-        Observable.range(10, 5).toList().subscribe(new Action1<List<Integer>>() {
+//        mSubscriptions.add(su);
+
+
+        Subscription s = Observable.zip(DemoRetrofit.getDemoApiInstance().getData(1), DemoRetrofit.getDemoApiInstance().getVideo(1), new Func2<Result<List<MeiZi>>, Result<List<Video>>, List<MeiZi>>() {
             @Override
-            public void call(List<Integer> integers) {
-                LogUtil.i("size:" + integers.size());
+            public List<MeiZi> call(Result<List<MeiZi>> listResult, Result<List<Video>> listResult2) {
+                XLog.d("listResult:" + listResult.results.size() + " listResult2:" + listResult2.results.size());
+                for (MeiZi meizi : listResult.results) {
+                    for (Video v : listResult2.results) {
+                        if (DateUtil.isSameDay(meizi.getPublishedAt(), v.getPublishedAt())) {
+                            meizi.setDesc(meizi.getDesc() + "  " + v.getDesc());
+                            break;
+                        }
+                    }
+                }
+//                for (int i = 0; i < listResult2.results.size(); i++) {
+//                    final MeiZi meizi = listResult.results.get(i);
+//                    listResult.results.get(i).setDesc(meizi.getDesc() + "  " + listResult2.results.get(i).getDesc());
+//                }
+                return listResult.results;
             }
-        });
+        })
+                .flatMap(new Func1<List<MeiZi>, Observable<MeiZi>>() {
+                    @Override
+                    public Observable<MeiZi> call(List<MeiZi> meiZiList) {
+                        return Observable.from(meiZiList);
+                    }
+                })
+                .toSortedList(new Func2<MeiZi, MeiZi, Integer>() {
+                    @Override
+                    public Integer call(MeiZi meiZi, MeiZi meiZi2) {
+                        return meiZi2.getPublishedAt().compareTo(meiZi.getPublishedAt());
+                    }
+                })
+                .compose(RxUtil.<List<MeiZi>>normalSchedulers())
+                .subscribe(new Action1<List<MeiZi>>() {
+                    @Override
+                    public void call(List<MeiZi> meiZiList) {
+                        XLog.d("hahhahahhahahhaha");
+                        mView.refresh(meiZiList);
+                        mView.showLoading(false);
+                    }
+                });
+
+        mSubscriptions.add(s);
+
 
         //map;flatmap都是用于将获取的数据A转换成数据B,区别在于flatmap用于做异步耗时处理
 
+    }
 
+    @Override
+    public void subscribe() {
+        loadData();
+    }
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.unsubscribe();
     }
 }

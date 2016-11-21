@@ -42,7 +42,7 @@ public class DemoFragment extends Fragment implements DemoContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start();
+        mPresenter.subscribe();
     }
 
     @Nullable
@@ -61,6 +61,12 @@ public class DemoFragment extends Fragment implements DemoContract.View {
         mFragmentDemoRecyclerView.setAdapter(mAdapter);
 
         return root;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.unSubscribe();
     }
 
     @Override

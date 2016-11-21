@@ -1,5 +1,7 @@
 package com.skyzone.netdemomvp.data.bean;
 
+import java.util.Date;
+
 /**
  * Created by Skyzone on 11/3/2016.
  */
@@ -17,9 +19,9 @@ public class MeiZi {
      */
 
     private String _id;
-    private String createdAt;
+    private Date createdAt;
     private String desc;
-    private String publishedAt;
+    private Date publishedAt;
     private String type;
     private String url;
     private boolean used;
@@ -33,11 +35,11 @@ public class MeiZi {
         this._id = _id;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -49,11 +51,11 @@ public class MeiZi {
         this.desc = desc;
     }
 
-    public String getPublishedAt() {
+    public Date getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(String publishedAt) {
+    public void setPublishedAt(Date publishedAt) {
         this.publishedAt = publishedAt;
     }
 

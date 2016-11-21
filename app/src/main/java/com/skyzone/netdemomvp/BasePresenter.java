@@ -5,5 +5,7 @@ package com.skyzone.netdemomvp;
  */
 public interface BasePresenter {
 
-    void start();
+    void subscribe();
+
+    void unSubscribe();
 }

@@ -15,9 +15,9 @@ import rx.Observable;
  */
 public interface DemoApi {
 
-    @GET("data/福利/200/{page}")
+    @GET("data/福利/800/{page}")
     Observable<Result<List<MeiZi>>> getData(@Path("page") int page);
 
-    @GET("data/休息视频/200/{page}")
+    @GET("data/休息视频/800/{page}")
     Observable<Result<List<Video>>> getVideo(@Path("page") int page);
 }
