@@ -1,12 +1,11 @@
 package com.skyzone.netdemomvp.demo;
 
 import com.elvishew.xlog.XLog;
-import com.skyzone.netdemomvp.DemoRetrofit;
+import com.skyzone.netdemomvp.RetrofitWrapper;
 import com.skyzone.netdemomvp.data.Result;
 import com.skyzone.netdemomvp.data.bean.MeiZi;
 import com.skyzone.netdemomvp.data.bean.Video;
 import com.skyzone.netdemomvp.util.DateUtil;
-import com.skyzone.netdemomvp.util.LogUtil;
 import com.skyzone.netdemomvp.util.RxUtil;
 
 import java.util.List;
@@ -111,68 +110,7 @@ public class DemoPresenter implements DemoContract.Presenter {
 //                        }
 //                );
 
-        String[] names = {"jax", "ling", "irvine"};
-        Observable.from(names)
-                .compose(RxUtil.<String>normalSchedulers())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        LogUtil.i(s);
-                    }
-                });
-//
-//        Observable.just(1, 2)
-//                .lift(new Observable.Operator<String, Integer>() {
-//                    @Override
-//                    public Subscriber<? super Integer> call(final Subscriber<? super String> subscriber) {
-//                        return new Subscriber<Integer>() {
-//                            @Override
-//                            public void onCompleted() {
-//                                subscriber.onCompleted();
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable e) {
-//                                subscriber.onError(e);
-//                            }
-//
-//                            @Override
-//                            public void onNext(Integer integer) {
-//                                subscriber.onNext("" + integer);
-//                            }
-//                        };
-//                    }
-//                });
-
-
-//        Subscription su = DemoRetrofit.getDemoApiInstance().getData(1)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(Schedulers.io())
-//                .subscribe(new WebTrueAction<Result<List<MeiZi>>>() {
-//                    @Override
-//                    public void onSuccess(final Result<List<MeiZi>> listResult) {
-//                        Subscription su_video = DemoRetrofit.getDemoApiInstance().getVideo(1)
-//                                .compose(RxUtil.<Result<List<Video>>>normalSchedulers())
-//                                .subscribe(new WebTrueAction<Result<List<Video>>>() {
-//                                    @Override
-//                                    public void onSuccess(Result<List<Video>> listResult_v) {
-//                                        XLog.d("hahhahahhahahhahah");
-//                                        for (int i = 0; i < listResult_v.results.size(); i++) {
-//                                            final MeiZi meizi = listResult.results.get(i);
-//                                            listResult.results.get(i).setDesc(meizi.getDesc() + "  " + listResult_v.results.get(i).getDesc());
-//                                        }
-//                                        mView.refresh(listResult.results);
-//                                        mView.showLoading(false);
-//                                    }
-//                                }, new WebFalseAction());
-//                        mSubscriptions.add(su_video);
-//                    }
-//                }, new WebFalseAction());
-
-//        mSubscriptions.add(su);
-
-
-        Subscription s = Observable.zip(DemoRetrofit.getDemoApiInstance().getData(1), DemoRetrofit.getDemoApiInstance().getVideo(1), new Func2<Result<List<MeiZi>>, Result<List<Video>>, List<MeiZi>>() {
+        Subscription ss = Observable.zip(RetrofitWrapper.Instance.getDemoApi().getData(1), RetrofitWrapper.Instance.getDemoApi().getVideo(1), new Func2<Result<List<MeiZi>>, Result<List<Video>>, List<MeiZi>>() {
             @Override
             public List<MeiZi> call(Result<List<MeiZi>> listResult, Result<List<Video>> listResult2) {
                 XLog.d("listResult:" + listResult.results.size() + " listResult2:" + listResult2.results.size());
@@ -207,16 +145,13 @@ public class DemoPresenter implements DemoContract.Presenter {
                 .subscribe(new Action1<List<MeiZi>>() {
                     @Override
                     public void call(List<MeiZi> meiZiList) {
-                        XLog.d("hahhahahhahahhaha");
+                        XLog.d("RetrofitWrapper");
                         mView.refresh(meiZiList);
                         mView.showLoading(false);
                     }
                 });
 
-        mSubscriptions.add(s);
-
-
-        //map;flatmap都是用于将获取的数据A转换成数据B,区别在于flatmap用于做异步耗时处理
+        mSubscriptions.add(ss);
 
     }
 
