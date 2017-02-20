@@ -14,7 +14,6 @@ public interface DemoContract {
     interface View extends BaseView<Presenter> {
 
         void refresh(List<MeiZi> meiZiList);
-
     }
 
     interface Presenter extends BasePresenter {

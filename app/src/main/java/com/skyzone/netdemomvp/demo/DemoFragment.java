@@ -1,5 +1,6 @@
 package com.skyzone.netdemomvp.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.skyzone.netdemomvp.BroadcastDemo.BroadcastActivityA;
 import com.skyzone.netdemomvp.R;
 import com.skyzone.netdemomvp.data.bean.MeiZi;
 import com.skyzone.netdemomvp.view.dialog_loading;
@@ -59,6 +61,13 @@ public class DemoFragment extends Fragment implements DemoContract.View {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mFragmentDemoRecyclerView.setLayoutManager(layoutManager);
         mFragmentDemoRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnItemClick(new DemoGrilAdapter.onItemClick() {
+            @Override
+            public void ItemClick() {
+                startActivity(new Intent(getActivity(), BroadcastActivityA.class));
+            }
+        });
 
         return root;
     }

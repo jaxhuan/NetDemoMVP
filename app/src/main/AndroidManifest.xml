@@ -12,12 +12,58 @@
         <activity android:name=".demo.DemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-    </application>
 
+        <activity android:name=".BroadcastDemo.BroadcastActivityA"></activity>
+
+        <activity android:name=".BroadcastDemo.BroadcastActivityB">
+            <intent-filter>
+                <action android:name="intent_filter_action_demo"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".BroadcastDemo.BroadcastActivityC">
+            <intent-filter>
+                <action android:name="intent_filter_action_demo"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+
+        <!--分享界面的实现，用户可以直接通过隐式intent调用进入到此页面-->
+        <activity android:name=".IntentDemo.ShareActivity">
+            <!--this activity handle shared text-->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <data android:mimeType="text/plain"></data>
+            </intent-filter>
+            <!--this activity also handle shared img\video-->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"></action>
+                <action android:name="android.intent.action.SEND_MULTIPLE"></action>
+
+                <category android:name="android.intent.category.DEFAULT"></category>
+
+                <data android:mimeType="application/vnd.google.panorama360+jpg"></data>
+                <data android:mimeType="image/*"></data>
+                <data android:mimeType="video/*"></data>
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".BroadcastDemo.DemoBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            >
+            <intent-filter android:priority="1000">
+                <action android:name="action_demo"></action>
+            </intent-filter>
+        </receiver>
+
+    </application>
     <meta-data
         android:name="UMENG_CHANNEL"
         android:value="${UMENG_CHANNEL_VALUE}"/>

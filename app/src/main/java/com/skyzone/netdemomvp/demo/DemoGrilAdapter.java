@@ -27,6 +27,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class DemoGrilAdapter extends RecyclerView.Adapter<DemoGrilAdapter.mViewHolder> {
 
     private List<MeiZi> mMeiZiList;
+    private onItemClick mOnItemClick;
 
     public DemoGrilAdapter(List<MeiZi> meiZiList) {
         mMeiZiList = meiZiList;
@@ -49,6 +50,10 @@ public class DemoGrilAdapter extends RecyclerView.Adapter<DemoGrilAdapter.mViewH
         return mMeiZiList.size();
     }
 
+    public void setOnItemClick(onItemClick onItemClick) {
+        mOnItemClick = onItemClick;
+    }
+
     class mViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.adapter_demo_girl)
@@ -63,6 +68,18 @@ public class DemoGrilAdapter extends RecyclerView.Adapter<DemoGrilAdapter.mViewH
 
             ButterKnife.bind(this, itemView);
             img.setSize(50, 50);
+
+            parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClick != null)
+                        mOnItemClick.ItemClick();
+                }
+            });
         }
+    }
+
+    public interface onItemClick {
+        void ItemClick();
     }
 }
