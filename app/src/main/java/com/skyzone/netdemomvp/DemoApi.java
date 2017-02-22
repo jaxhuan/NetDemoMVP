@@ -6,7 +6,11 @@ import com.skyzone.netdemomvp.data.bean.Video;
 
 import java.util.List;
 
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -20,4 +24,10 @@ public interface DemoApi {
 
     @GET("data/休息视频/800/{page}")
     Observable<Result<List<Video>>> getVideo(@Path("page") int page);
+
+    @Headers("Auth-Type:Token")
+    @FormUrlEncoded
+    @POST("hahhah")
+    Observable<Result<MeiZi>> postToken(@Field("name") String name);
+
 }

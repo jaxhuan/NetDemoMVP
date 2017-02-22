@@ -63,6 +63,9 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".ServiceDemo.DownLoadService">
+        </service>
+
     </application>
     <meta-data
         android:name="UMENG_CHANNEL"

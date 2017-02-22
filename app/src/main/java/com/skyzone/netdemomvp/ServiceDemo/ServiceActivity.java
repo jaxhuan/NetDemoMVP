@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.HandlerThread;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -36,6 +38,7 @@ public class ServiceActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         this.mContext = this;
+        HandlerThread thread = new HandlerThread("service thread", Process.THREAD_PRIORITY_BACKGROUND);
     }
 
     @OnClick({R.id.activity_service_bt_down_load, R.id.activity_service_bt_cancel})

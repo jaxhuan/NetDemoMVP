@@ -6,6 +6,10 @@ import com.skyzone.netdemomvp.data.Result;
 import com.skyzone.netdemomvp.data.bean.MeiZi;
 import com.skyzone.netdemomvp.data.bean.Video;
 import com.skyzone.netdemomvp.util.DateUtil;
+import com.skyzone.netdemomvp.util.RxJava.ResponseError;
+import com.skyzone.netdemomvp.util.RxJava.WebErrorAction;
+import com.skyzone.netdemomvp.util.RxJava.WebErrorActionUI;
+import com.skyzone.netdemomvp.util.RxJava.WebTrueAction;
 import com.skyzone.netdemomvp.util.RxUtil;
 
 import java.util.List;
@@ -148,6 +152,21 @@ public class DemoPresenter implements DemoContract.Presenter {
                         XLog.d("RetrofitWrapper");
                         mView.refresh(meiZiList);
                         mView.showLoading(false);
+                    }
+                }, new WebErrorAction());
+
+        Subscription subscription = RetrofitWrapper.Instance.getDemoApi()
+                .postToken("hahha")
+                .compose(RxUtil.<Result<MeiZi>>normalSchedulers())
+                .subscribe(new WebTrueAction<Result<MeiZi>>() {
+                    @Override
+                    public void onSuccess(Result<MeiZi> meiZiResult) {
+
+                    }
+                }, new WebErrorActionUI() {
+                    @Override
+                    public void onFailed(ResponseError error) {
+                        XLog.d("hhahahhahhahhaa:" + error.message);
                     }
                 });
 
